@@ -1,12 +1,17 @@
-import {Body, Controller, Delete, Get, Header, HttpCode, HttpStatus, Param, Post, Put} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Header,
+  HttpCode, HttpStatus, Param, Post, Put, UseGuards } from '@nestjs/common';
 import {CreateUserDto} from './dtos/create-user.dto';
 import {UsersService} from './user.service';
+import {JwtAuthGuard} from "../auth/jwt-auth.guard";
+import {Roles} from "../auth/roles-auth.decorator";
 
 @Controller('users')
 export class UsersController {
   constructor(private userService: UsersService) {}
 
   @Get('/')
+  // @Roles('admin')
+  // @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.OK)
   @Header('Cache-Control', 'none')
   async findAll() {

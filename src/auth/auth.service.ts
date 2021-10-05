@@ -2,7 +2,7 @@ import {BadRequestException, Injectable, UnauthorizedException} from '@nestjs/co
 import {CreateUserDto, Login} from "../users/dtos/create-user.dto";
 import { UsersService } from "../users/user.service";
 import {JwtService} from "@nestjs/jwt";
-// import * as bcrypt from 'bcryptjs'
+import * as bcrypt from 'bcryptjs'
 
 
 @Injectable()
@@ -12,9 +12,7 @@ export class AuthService {
                 private jwtService: JwtService) {}
 
     async login(userDto: Login) {
-        console.log(userDto+"LOGIN")
         const user = await this.validateUser(userDto)
-        console.log(user+ "AFTER VALIDATE")
         return this.generateToken(user)
     }
 
@@ -40,9 +38,9 @@ export class AuthService {
     private async validateUser(userDto: Login) {
         const user = await this.userService.getUserByEmail(userDto.email);
         // Compare password
-        // const passwordEquals = await bcrypt.compare(userDto.password, user.password);
+        const passwordEquals = await bcrypt.compare(userDto.password, user.password);
 
-        if (user && user.password === userDto.password) {
+        if (user && passwordEquals) {
             return user;
         }
         throw new UnauthorizedException({message: 'Incorrect email or password'})
