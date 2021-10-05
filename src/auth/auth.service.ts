@@ -1,25 +1,20 @@
 import {BadRequestException, HttpException, HttpStatus, Injectable, UnauthorizedException} from '@nestjs/common';
-import {CreateUserDto} from "../users/dtos/create-user.dto";
+import {CreateUserDto, Login} from "../users/dtos/create-user.dto";
 import { UsersService } from "../users/user.service";
 import {JwtService} from "@nestjs/jwt";
 import * as bcrypt from 'bcryptjs'
-import {InjectModel} from "@nestjs/mongoose";
-import {User, UserDocument} from "../users/schema/user.schema";
-import {Model} from "mongoose";
 
 
 @Injectable()
 export class AuthService {
 
-    constructor(
+    constructor(private userService: UsersService,
+                private jwtService: JwtService) {}
 
-        private userService: UsersService,
-                private jwtService: JwtService,
-    ) {}
-
-    async login(userDto: CreateUserDto) {
+    async login(userDto: Login) {
         console.log(userDto+"LOGIN")
         const user = await this.validateUser(userDto)
+        console.log(user+ "AFTER VALIDATE")
         return this.generateToken(user)
     }
 
@@ -42,11 +37,12 @@ export class AuthService {
         }
     }
 
-    private async validateUser(userDto: CreateUserDto) {
-        console.log(userDto+ "VALIDATE")
+    private async validateUser(userDto: Login) {
+        console.log(userDto+ " VALIDATE")
         const user = await this.userService.getUserByEmail(userDto.email);
-        console.log(user)
+        console.log(user + " AFTER GET USER BY EMAIL")
         const passwordEquals = await bcrypt.compare(userDto.password, user.password);
+        console.log(passwordEquals + " PASSWORD EQUAL")
         if (user && passwordEquals) {
             return user;
         }

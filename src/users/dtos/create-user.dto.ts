@@ -6,7 +6,7 @@ export class CreateUserDto {
     @IsNotEmpty()
     @ApiProperty({example: 'user@gmail.com', description: 'Email'})
     @IsString({message: 'Password must be string'})
-    @IsEmail({}, {message: "Incorrect password"})
+    @IsEmail({}, {message: "Incorrect email"})
     email: string;
 
     @ApiProperty({example: 'qazxsde12345', description: 'Password'})
@@ -36,4 +36,11 @@ export class CreateUserDto {
     gender: string;
 
     _id: string
+}
+
+export class Login {
+
+    email: string;
+    password: string
+
 }
