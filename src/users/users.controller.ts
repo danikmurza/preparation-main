@@ -6,12 +6,13 @@ import {JwtAuthGuard} from "../auth/jwt-auth.guard";
 import {Roles} from "../auth/roles-auth.decorator";
 
 @Controller('users')
+@UseGuards(JwtAuthGuard)
 export class UsersController {
   constructor(private userService: UsersService) {}
 
   @Get('/')
   // @Roles('admin')
-  // @UseGuards(JwtAuthGuard)
+
   @HttpCode(HttpStatus.OK)
   @Header('Cache-Control', 'none')
   async findAll() {
