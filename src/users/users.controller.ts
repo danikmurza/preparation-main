@@ -1,33 +1,35 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
-import { CreateUserDto } from './dtos/create-user.dto';
-import { UserService } from './user.service';
+import {Body, Controller, Delete, Get, Header, HttpCode, HttpStatus, Param, Post, Put} from '@nestjs/common';
+import {CreateUserDto} from './dtos/create-user.dto';
+import {UsersService} from './user.service';
 
 @Controller('users')
 export class UsersController {
-  constructor(private userService: UserService) {}
+  constructor(private userService: UsersService) {}
 
   @Get('/')
+  @HttpCode(HttpStatus.OK)
+  @Header('Cache-Control', 'none')
   async findAll() {
-    return await this.userService.findAll();
+    return await this.userService.findAll()
   }
 
-  @Post('/addUser')
-  async addVehicle(@Body() body: CreateUserDto) {
-    const user = await this.userService.add(body);
-    return user;
+  @Get('find/:id')
+  @HttpCode(HttpStatus.OK)
+  async getById(@Param('id') id: string) {
+     return await this.userService.findById(id)
   }
 
-  @Get(':_id')
-  async getById(@Param('_id') _id: string) {
-    console.log(' User Controller ' + _id);
-    const user = await this.userService.getById(_id);
-    return user;
+  @Delete('delete/:id')
+  @HttpCode(HttpStatus.OK)
+  async deleteById(@Param('id') _id: string) {
+      return await this.userService.deleteById(_id);
   }
 
-  @Post('find:_id')
-  async findById(@Param('_id') _id: string, @Body() body: CreateUserDto) {
-    console.log(' User Controller ' + _id);
-    const user = await this.userService.getById(_id);
-    return user;
+  @Put('update/:id')
+  @HttpCode(HttpStatus.OK)
+  async update(@Body() body: CreateUserDto, @Param('id') id: string) {
+      return await this.userService.update(id, body);
   }
+
+
 }

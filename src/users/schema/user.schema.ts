@@ -21,8 +21,13 @@ export enum Gender {
 // by db.getCollection('USERS').dropIndexes()
 @Schema({ collection: 'USERS' })
 export class User {
+
   @Prop({ required: true, lowercase: true, unique: true })
   email: string;
+
+  @Prop({ required: true})
+  password: string;
+
 
   @Prop({ required: true })
   firstName: string;
