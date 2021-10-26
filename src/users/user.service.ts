@@ -17,7 +17,7 @@ export class UsersService {
   constructor(@InjectModel(User.name) private readonly userModel: Model<UserDocument>) {}
 
   async findAll() {
-    return this.userModel.find().populate('todos').exec();
+    return this.userModel.find().exec();
   }
 
   async findByEmail(email: string) {
