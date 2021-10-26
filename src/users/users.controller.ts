@@ -1,9 +1,10 @@
 import { Body, Controller, Delete, Get, Header,
   HttpCode, HttpStatus, Param, Post, Put, UseGuards } from '@nestjs/common';
-import {CreateUserDto} from './dtos/create-user.dto';
+import {AddTask, CreateUserDto} from './dtos/create-user.dto';
 import {UsersService} from './user.service';
 import {JwtAuthGuard} from "../auth/jwt-auth.guard";
 import {Roles} from "../auth/roles-auth.decorator";
+
 
 @Controller('users')
 @UseGuards(JwtAuthGuard)
@@ -11,8 +12,6 @@ export class UsersController {
   constructor(private userService: UsersService) {}
 
   @Get('/')
-  // @Roles('admin')
-
   @HttpCode(HttpStatus.OK)
   @Header('Cache-Control', 'none')
   async findAll() {
@@ -37,5 +36,10 @@ export class UsersController {
       return await this.userService.update(id, body);
   }
 
-
+  @Put('todo/:id')
+  @HttpCode(HttpStatus.OK)
+  async updateTodo(@Body() body: AddTask, @Param('id') id: string) {
+    console.log(id)
+    return await this.userService.updateTodo(id, body);
+  }
 }

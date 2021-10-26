@@ -7,7 +7,7 @@ import {
 import * as bcrypt from 'bcryptjs'
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { CreateUserDto } from './dtos/create-user.dto';
+import {AddTask, CreateUserDto} from './dtos/create-user.dto';
 import { User, UserDocument } from './schema/user.schema';
 
 
@@ -17,14 +17,14 @@ export class UsersService {
   constructor(@InjectModel(User.name) private readonly userModel: Model<UserDocument>) {}
 
   async findAll() {
-    return this.userModel.find().exec();
+    return this.userModel.find().populate('todos').exec();
   }
 
   async findByEmail(email: string) {
     if (!email) {
       return null;
     }
-    const userList = await this.userModel.find({ email: email }).exec();
+    const userList = await this.userModel.find({ email: email }).populate({path: 'todos', model: "Todo"}).exec();
     return userList
   }
 
@@ -52,6 +52,13 @@ export class UsersService {
   async getUserByEmail(email: string) {
     const user = await this.userModel.findOne({where: {email}, include: {all: true}})
     return user;
+  }
+
+  async updateTodo(_id: string, todo: AddTask)  {
+    let toUpdate = await this.findById(_id)
+    console.log(toUpdate)
+    let updated = Object.assign(toUpdate, todo)
+    return this.userModel.findByIdAndUpdate(_id, {$push: {...todo}});
   }
 
 

@@ -1,6 +1,7 @@
 import {Type} from 'class-transformer';
 import {ApiProperty} from "@nestjs/swagger";
 import {IsDate, IsEmail, IsNotEmpty, IsString, Length} from 'class-validator';
+import {ObjectId} from "mongoose";
 
 export class CreateUserDto {
     @IsNotEmpty()
@@ -14,33 +15,30 @@ export class CreateUserDto {
     @Length(4, 16, {message: 'Not less 4 and not more 16'})
     password: string
 
-    @IsNotEmpty()
-    @IsString()
-    firstName: string;
-
-    @IsNotEmpty()
-    @IsString()
-    lastName: string;
-
-    // @IsNotEmpty()
-    // @Type(() => Date)
-    // @IsDate()
-    // dateOfBirth: Date;
-
-    @IsNotEmpty()
-    @IsString()
-    maritalStatus: string;
-
-    @IsNotEmpty()
-    @IsString()
-    gender: string;
-
     _id: string
+
 }
 
 export class Login {
 
     email: string;
     password: string
+
+}
+
+export class AddTask {
+
+    todo:string
+    _id: ObjectId
+
+    title: string;
+
+    description: string;
+
+    priority: string
+
+    duration: string
+
+    done: boolean
 
 }
